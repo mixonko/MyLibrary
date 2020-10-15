@@ -13,7 +13,7 @@ class BottomLayout{
 
     companion object {
         var appsFlayerData: Map<String, Any>? = null
-        private var text: String? = null
+         var text: String? = null
         var afID = ""
         var flag = ""
         var newText = ""
