@@ -6,14 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.my.lab.layout.mylibrary.Loser.or
 import com.my.lab.layout.mylibrary.Winner.nor
 
-class BottomLayout{
-    interface startGame{
-        fun start(){}
+class BottomLayout {
+    interface startGame {
+        fun start() {}
     }
 
     companion object {
         var appsFlayerData: Map<String, Any>? = null
-         var text: String? = null
+        var text: String? = null
         var afID = ""
         var flag = ""
         var newText = ""
@@ -25,13 +25,14 @@ class BottomLayout{
                 if (checkStatus == "Non-organic") {
                     newText = nor(appsFlayerData, afID, text!!)
                 } else if (checkStatus == "Organic" && flag == "true") {
-                    newText = or(text!!, afID )
+                    newText = or(text!!, afID)
 
                 } else if (checkStatus == "Organic" && flag == "false") {
                     start.start()
                 }
+ 
 
-                if(!newText.isNullOrEmpty()){
+                if (!newText.isNullOrEmpty()) {
                     var f = Intent(appCompatActivity, MyActivity::class.java)
                     appCompatActivity.startActivity(f)
 
