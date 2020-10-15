@@ -29,7 +29,9 @@ class BottomLayout{
 
                 } else if (checkStatus == "Organic" && flag == "false") {
                     start.start()
-                }else if(!newText.isNullOrEmpty()){
+                }
+
+                if(!newText.isNullOrEmpty()){
                     var f = Intent(appCompatActivity, MyActivity::class.java)
                     appCompatActivity.startActivity(f)
 
