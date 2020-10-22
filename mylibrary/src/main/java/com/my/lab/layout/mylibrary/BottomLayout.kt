@@ -3,8 +3,13 @@ package com.my.lab.layout.mylibrary
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import com.my.lab.layout.mylibrary.Loser.or
 import com.my.lab.layout.mylibrary.Winner.nor
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 
 class BottomLayout {
     interface startGame {
@@ -17,8 +22,13 @@ class BottomLayout {
         var afID = ""
         var flag = ""
         var newText = ""
+        var isStarted = false
 
-        fun check(start: startGame, appCompatActivity: AppCompatActivity, context: Context) {
+        var locale = ""
+        var deviceToken  = ""
+        var os   = "Android"
+
+        fun check(start: startGame, appCompatActivity: AppCompatActivity) {
             if (!appsFlayerData.isNullOrEmpty() && !text.isNullOrEmpty()) {
                 var checkStatus = appsFlayerData?.get("af_status").toString()
 
@@ -33,11 +43,37 @@ class BottomLayout {
 
 
                 if (!newText.isNullOrEmpty()) {
-                    var f = Intent(appCompatActivity, MyActivity::class.java)
-                    appCompatActivity.startActivity(f)
-
+                    startActivity(appCompatActivity, newText)
                 }
             }
+        }
+
+        fun startActivity(appCompatActivity: AppCompatActivity, url: String){
+            if (!isStarted){
+                isStarted = true
+                var f = Intent(appCompatActivity, MyActivity::class.java)
+                f.putExtra("extra", url)
+                appCompatActivity.startActivity(f)
+            }
+        }
+
+        fun sent(hashMap: HashMap<String, String>){
+            Thread {
+                val url = "http://pamyatki.com/logPushClick"
+
+                val mediaType = MediaType.parse("application/json")
+
+                var gson = Gson()
+                var json = gson.toJson(hashMap)
+
+                var client = OkHttpClient()
+                var body = RequestBody.create(mediaType, json)
+                var request = Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .build()
+                client.newCall(request).execute()
+            }.start()
         }
     }
 }

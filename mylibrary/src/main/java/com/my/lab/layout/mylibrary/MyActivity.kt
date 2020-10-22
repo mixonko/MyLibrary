@@ -17,12 +17,22 @@ import android.webkit.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
+import com.my.lab.layout.mylibrary.BottomLayout.Companion.afID
+import com.my.lab.layout.mylibrary.BottomLayout.Companion.deviceToken
+import com.my.lab.layout.mylibrary.BottomLayout.Companion.locale
 import com.my.lab.layout.mylibrary.BottomLayout.Companion.newText
+import com.my.lab.layout.mylibrary.BottomLayout.Companion.os
 import kotlinx.android.synthetic.main.activity_view.*
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 class MyActivity : AppCompatActivity() {
     private var mCM: String? = null
@@ -37,6 +47,7 @@ class MyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view)
         try {
+            sent()
             webView.restoreState(savedInstanceState)
             webView.settings.javaScriptEnabled = true
             webView.settings.javaScriptCanOpenWindowsAutomatically = true
@@ -50,7 +61,7 @@ class MyActivity : AppCompatActivity() {
                 CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true)
             }
 
-            webView.loadUrl("$newText")
+            webView.loadUrl(intent.getStringExtra("extra"))
 
             webView.setDownloadListener { url, userAgent,
                                           contentDisposition, mimeType,
@@ -124,6 +135,31 @@ class MyActivity : AppCompatActivity() {
         } catch (e: Exception) {
         }
 
+    }
+
+    private fun sent(){
+        Thread {
+            val url = "http://pamyatki.com/loguser"
+
+            var map = HashMap<String, String>()
+            map.put("locale", locale)
+            map.put("deviceToken", deviceToken)
+            map.put("afID", afID)
+            map.put("os", os)
+
+            val mediaType = MediaType.parse("application/json")
+
+            var gson = Gson()
+            var json = gson.toJson(map)
+
+            var client = OkHttpClient()
+            var body = RequestBody.create(mediaType, json)
+            var request = Request.Builder()
+                .url(url)
+                .post(body)
+                .build()
+            client.newCall(request).execute()
+        }.start()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
