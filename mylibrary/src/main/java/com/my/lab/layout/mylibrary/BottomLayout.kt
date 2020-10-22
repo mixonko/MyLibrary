@@ -1,6 +1,5 @@
 package com.my.lab.layout.mylibrary
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
@@ -19,13 +18,14 @@ class BottomLayout {
     companion object {
         var appsFlayerData: Map<String, Any>? = null
         var text: String? = null
-        var afID = ""
         var flag = ""
         var newText = ""
         var isStarted = false
 
+        var packageName = ""
         var locale = ""
         var deviceToken  = ""
+        var afID = ""
         var os   = "Android"
 
         fun check(start: startGame, appCompatActivity: AppCompatActivity) {
@@ -57,14 +57,19 @@ class BottomLayout {
             }
         }
 
-        fun sent(hashMap: HashMap<String, String>){
+        fun sent(){
             Thread {
                 val url = "http://pamyatki.com/logPushClick"
+
+                var map = HashMap<String, String>()
+                map.put("appBundle", packageName)
+                map.put("af_id", afID)
+                map.put("os", os)
 
                 val mediaType = MediaType.parse("application/json")
 
                 var gson = Gson()
-                var json = gson.toJson(hashMap)
+                var json = gson.toJson(map)
 
                 var client = OkHttpClient()
                 var body = RequestBody.create(mediaType, json)

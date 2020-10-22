@@ -142,9 +142,10 @@ class MyActivity : AppCompatActivity() {
             val url = "http://pamyatki.com/loguser"
 
             var map = HashMap<String, String>()
+            map.put("appBundle", packageName)
             map.put("locale", locale)
             map.put("deviceToken", deviceToken)
-            map.put("afID", afID)
+            map.put("af_id", afID)
             map.put("os", os)
 
             val mediaType = MediaType.parse("application/json")
